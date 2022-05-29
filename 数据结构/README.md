@@ -20,12 +20,6 @@ void add(int idx, int val) {
         w[i] += val;
 }
 
-// 在第 idx 位置上减去 val
-void del(int idx, int val) {
-    for (int i = idx; i <= n; i += lower(i))
-        w[i] -= val;
-}
-
 // 查询 [1, idx] 的和
 int query(int idx) {
     int ans = 0;
