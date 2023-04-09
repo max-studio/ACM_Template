@@ -7,6 +7,7 @@
 直接暴力 8 重 for 循环，因为年份是确定的，所以可以减少一些无效的枚举，时间可控。用 map 存一下出现的日期，最后输出 map 的长度即可。答案：235。
 
 **Code:**
+
 ```C++
 #include <iostream>
 #include <map>
@@ -166,12 +167,20 @@ int main() {
             f[e] = 0;
             continue;
         }
-        // 当前数字不删除，接龙
-        f[e] = f[x];
-        // 当前数字删除，处理以其他数字结尾的情况
-        for (int j = 0; j <= 9; ++ j)
+        // 如果使用当前这个数接龙，需要删除多少个数
+        int use = f[x];
+        // 状态转移
+        for (int j = 0; j <= 9; ++ j) {
+            // 其他状态正常转移
+            // 如果是 e 则需要比较三种情况：
+            // 1. 当前这个数不用，结果为 f[j] + 1
+            // 2. 使用当前这个数接龙，需要删除 use 个数
+            // 3. 删除前面所有的数，当前这个数为接龙的第一个数，需要删除 i - 1 个数
             if (j != e)
                 f[j] ++;
+            else 
+                f[j] = min(min(f[j] + 1, use), i - 1);
+        }
     }
     // 取删除最少的情况
     int ans = f[0];
@@ -254,28 +263,10 @@ int l[N], r[N], idx[N];
 // 小顶堆，排序用
 int h[N];
 
-// 构建堆时，将 u 位置的元素和其子节点比较，小的元素在上层。e 为堆的元素个数
-void up(int u, int e) {
-    // 取左右子节点下标
-    int left = u << 1, right = (u << 1) | 1;
-    // v 为三个节点中，最小的节点的位置
-    int v = u;
-    // 如果左子节点存在（下标不大于 e），判断是否小于 v 位置的元素，如果小于，更新 v
-    if (left <= e && (a[h[left]] < a[h[v]] || (a[h[left]] == a[h[v]] && h[left] < h[v])))
-        v = left;
-    // 判断右子节点，更新 v
-    if (right <= e && (a[h[right]] < a[h[v]] || (a[h[right]] == a[h[v]] && h[right] < h[v])))
-        v = right;
-    // 如果 v != u，说明需要交换
-    if (v != u) {
-        swap(h[v], h[u]);
-        // 更新数组元素在堆中的位置
-        idx[h[v]] = v;
-        idx[h[u]] = u;
-    }
-}
-
 void down(int u, int e) {
+    if (u < 1 || (u << 1) > e) {
+        return;
+    }
     // 保持堆有序，判断 u 位置元素是否需要向下移动
     int left = u << 1, right = (u << 1) | 1;
     int v = u;
@@ -297,7 +288,7 @@ void down(int u, int e) {
 // 基于堆中的元素，构建小顶堆
 void build(int s, int e) {
     for (int i = (e >> 1); i; -- i)
-        up(i, e);
+        down(i, e);
 }
 
 int main()  {
@@ -326,6 +317,8 @@ int main()  {
         a[u] = -1;
         // 删除堆顶元素，并更新堆的长度
         swap(h[1], h[e]);
+        idx[h[1]] = 1;
+        idx[h[e]] = e;
         e --;
         // 保持堆的有序
         // 因为左右两个数都变大了，所以需要向下移动
