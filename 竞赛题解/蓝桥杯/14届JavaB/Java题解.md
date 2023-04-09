@@ -133,7 +133,7 @@ public class Main {
 ```java
 import java.util.Scanner;
 
-public class MainC {
+public class Main {
     public static final long MOD = 1000000007;
     public static long cnt;
     public static void main(String[] args) {
@@ -282,6 +282,8 @@ public class Main {
 
 
 ## F: 合并区域
+
+**有特殊情况未考虑,待修改**
 
 ```java
 import java.util.Scanner;
