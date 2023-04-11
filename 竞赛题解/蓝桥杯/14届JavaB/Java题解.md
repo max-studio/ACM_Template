@@ -185,7 +185,7 @@ public class Main {
 
 如图所示遍历情况是不会重复计算多层矩形覆盖的面积
 
-![image-20230409204744348](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20230409204744348.png)
+![](/第十四届蓝桥杯 JB 题解20230409204744348.png)
 
 ```java
 import java.util.Scanner;
